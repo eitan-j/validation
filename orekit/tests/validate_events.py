@@ -4,7 +4,6 @@ from astropy import units as u
 from astropy.tests.helper import assert_quantity_allclose
 from astropy.time import Time
 from boinor.bodies import Earth
-from boinor.core.propagation import cowell
 from boinor.twobody import Orbit
 from boinor.twobody.events import (
     LatitudeCrossEvent,
@@ -12,6 +11,7 @@ from boinor.twobody.events import (
     PenumbraEvent,
     UmbraEvent,
 )
+from boinor.twobody.propagation import CowellPropagator
 from orekit.pyhelpers import setup_orekit_curdir
 from org.orekit.bodies import CelestialBodyFactory, OneAxisEllipsoid
 from org.orekit.frames import FramesFactory
@@ -163,13 +163,11 @@ def validate_event_detector(event_name):
     print(f"{orekit_event_epoch}")
 
     # Propagate boinor's orbit
-    _, _ = cowell(
-        Earth.k,
-        ss0_boinor.r,
-        ss0_boinor.v,
+    cowell = CowellPropagator(events=[boinor_event])
+    _, _ = cowell.propagate_many(
+        Orbit.from_vectors(Earth, ss0_boinor.r, ss0_boinor.v).state,
         # Generate a set of tofs, each one for each propagation second
         np.linspace(0, tof, 100) * u.s,
-        events=[boinor_event],
     )
     boinor_event_epoch = ss0_boinor.epoch + boinor_event.last_t
     print(f"{boinor_event_epoch}")
