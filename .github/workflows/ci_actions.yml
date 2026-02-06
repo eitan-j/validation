@@ -24,9 +24,9 @@ jobs:
     # Steps to be executed during code quality job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       # Python code quality and lint
-      - uses: ricardochaves/python-lint@v1.3.0
+      - uses: ricardochaves/python-lint@v1
         with:
           python-root-list: "orekit/"
           use-black: true
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.13]
+        python-version: [3.10, 3.11, 3.12, 3.13, 3.14, 3.15-rc, 3.13t, 3.14t, 3.15t-rc, pypy3.11]
     defaults:
       run:
         shell: bash -l {0}
@@ -55,13 +55,12 @@ jobs:
     # Steps to be executed during tests checking job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       # Install miniconda
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@v3
         with:
           environment-file: orekit/environment.yml
           python-version: ${{ matrix.python-version }}
-          auto-activate-base: false
           activate-environment: boinor-validation
       - run: |
           conda info

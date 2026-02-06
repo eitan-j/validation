@@ -22,17 +22,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.13]
+        python-version: [3.10, 3.11, 3.12, 3.13, 3.14, 3.15-rc, 3.13t, 3.14t, 3.15t-rc, pypy3.11]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
            repository: 'boinor/boinor'
            ref: ${{ inputs.boinor-branch }}
            path: boinor
         
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           
@@ -40,13 +40,13 @@ jobs:
         run: python3 -m pip install .
         working-directory: boinor
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
            repository: 'boinor/validation'
            ref: ${{ inputs.validation-branch }}
            path: validation
 
-      - uses: ricardochaves/python-lint@v1.3.0
+      - uses: ricardochaves/python-lint@v1
         with:
           python-root-list: "validation/orekit/"
           use-black: true
@@ -66,21 +66,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.13]
+        python-version: [3.10, 3.11, 3.12, 3.13, 3.14, 3.15-rc, 3.13t, 3.14t, 3.15t-rc, pypy3.11]
     defaults:
       run:
         shell: bash -l {0}
 
     # Steps to be executed during tests checking job
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
-           repository: 'boinor/boinor'
+           repository: 'eitan-j/boinor'
            ref: ${{ inputs.boinor-branch }}
            path: boinor
         
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           
@@ -88,18 +88,17 @@ jobs:
         run: python3 -m pip install .
         working-directory: boinor
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
-           repository: 'boinor/validation'
+           repository: 'eitan-j/validation'
            ref: ${{ inputs.validation-branch }}
            path: validation-orekit
 
       # Install miniconda
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@v3
         with:
           environment-file: validation-orekit/orekit/environment.yml
           python-version: ${{ matrix.python-version }}
-          auto-activate-base: false
           activate-environment: boinor-validation
       - run: |
           conda info
