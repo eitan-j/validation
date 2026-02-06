@@ -26,7 +26,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v6
       # Python code quality and lint
-      - uses: ricardochaves/python-lint@v1
+      - uses: ricardochaves/python-lint@v1.4.0
         with:
           python-root-list: "orekit/"
           use-black: true
