@@ -7,16 +7,6 @@ import pytest
 from astropy import units as u
 from astropy.coordinates import CartesianRepresentation
 from astropy.tests.helper import assert_quantity_allclose
-from numpy.linalg import norm
-from org.hipparchus.geometry.euclidean.threed import Vector3D
-from org.orekit.bodies import CelestialBodyFactory
-from org.orekit.frames import Frame, FramesFactory, Transform
-from org.orekit.time import AbsoluteDate
-from org.orekit.utils import (
-    IERSConventions,
-    PVCoordinatesProvider,
-    TimeStampedPVCoordinates,
-)
 from boinor.bodies import Earth as Earth_boinor
 from boinor.bodies import Jupiter as Jupiter_boinor
 from boinor.bodies import Mars as Mars_boinor
@@ -48,9 +38,19 @@ from boinor.frames.fixed import SaturnFixed as SaturnFixed_boinor
 from boinor.frames.fixed import SunFixed as SunFixed_boinor
 from boinor.frames.fixed import UranusFixed as UranusFixed_boinor
 from boinor.frames.fixed import VenusFixed as VenusFixed_boinor
+from numpy.linalg import norm
+from orekit.pyhelpers import setup_orekit_curdir
+from org.hipparchus.geometry.euclidean.threed import Vector3D
+from org.orekit.bodies import CelestialBodyFactory
+from org.orekit.frames import Frame, FramesFactory, Transform
+from org.orekit.time import AbsoluteDate
+from org.orekit.utils import (
+    IERSConventions,
+    PVCoordinatesProvider,
+    TimeStampedPVCoordinates,
+)
 
 import orekit
-from orekit.pyhelpers import setup_orekit_curdir
 
 # Setup orekit virtual machine and associated data
 VM = orekit.initVM()
@@ -147,7 +147,10 @@ OREKIT_BODIES_AND_FRAMES = dict(
     zip(BODIES_NAMES, zip(OREKIT_BODIES, OREKIT_FIXED_FRAMES))
 )
 BOINOR_BODIES_AND_FRAMES = dict(
-    zip(BODIES_NAMES, zip(BOINOR_BODIES, BOINOR_ICRS_FRAMES, BOINOR_FIXED_FRAMES),)
+    zip(
+        BODIES_NAMES,
+        zip(BOINOR_BODIES, BOINOR_ICRS_FRAMES, BOINOR_FIXED_FRAMES),
+    )
 )
 
 
@@ -216,7 +219,10 @@ def validate_from_body_intertial_to_body_fixed(body_name, r_vec, v_vec):
     )
 
     # orekit: collect body information
-    (BODY_OREKIT, BODY_FIXED_FRAME_OREKIT,) = OREKIT_BODIES_AND_FRAMES[body_name]
+    (
+        BODY_OREKIT,
+        BODY_FIXED_FRAME_OREKIT
+    ) = OREKIT_BODIES_AND_FRAMES[body_name]
 
     # orekit: build r_vec and v_vec wrt inertial body frame
     xyz_orekit = Vector3D(rx, ry, rz)
@@ -237,7 +243,8 @@ def validate_from_body_intertial_to_body_fixed(body_name, r_vec, v_vec):
 
     # orekit: build conversion between BodyICRF and BodyFixed frames
     bodyICRF_to_bodyFIXED_orekit = BODY_ICRF_FRAME_OREKIT.getTransformTo(
-        BODY_FIXED_FRAME_OREKIT, J2000_OREKIT,
+        BODY_FIXED_FRAME_OREKIT,
+        J2000_OREKIT
     )
 
     # orekit: convert from inertial coordinates to non-inertial ones
@@ -305,5 +312,8 @@ def validate_GCRF_to_ITRF(r_vec, v_vec):
 
     # Check position conversion
     assert_quantity_allclose(
-        coords_ITRS_boinor, coords_ITRF_orekit, atol=1e-3 * u.m, rtol=1e-2,
+        coords_ITRS_boinor,
+        coords_ITRF_orekit,
+        atol=1e-3 * u.m,
+        rtol=1e-2
     )
