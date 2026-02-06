@@ -3,9 +3,19 @@ import pytest
 from astropy import units as u
 from astropy.tests.helper import assert_quantity_allclose
 from astropy.time import Time
+from boinor.bodies import Earth
+from boinor.twobody import Orbit
+from boinor.twobody.events import (
+    LatitudeCrossEvent,
+    NodeCrossEvent,
+    PenumbraEvent,
+    UmbraEvent,
+)
+from boinor.twobody.propagation import cowell
+from orekit.pyhelpers import setup_orekit_curdir
 from org.orekit.bodies import CelestialBodyFactory, OneAxisEllipsoid
 from org.orekit.frames import FramesFactory
-from org.orekit.orbits import KeplerianOrbit, PositionAngle
+from org.orekit.orbits import KeplerianOrbit, PositionAngleType
 from org.orekit.propagation.analytical import KeplerianPropagator
 from org.orekit.propagation.events import (
     EclipseDetector,
@@ -19,18 +29,8 @@ from org.orekit.propagation.events.handlers import (
 )
 from org.orekit.time import AbsoluteDate, TimeScalesFactory
 from org.orekit.utils import Constants, IERSConventions
-from boinor.bodies import Earth
-from boinor.twobody import Orbit
-from boinor.twobody.events import (
-    LatitudeCrossEvent,
-    NodeCrossEvent,
-    PenumbraEvent,
-    UmbraEvent,
-)
-from boinor.twobody.propagation import cowell
 
 import orekit
-from orekit.pyhelpers import setup_orekit_curdir
 
 # Setup orekit virtual machine and associated data
 VM = orekit.initVM()
@@ -65,7 +65,7 @@ ss0_orekit = KeplerianOrbit(
     float(argp * DEG_TO_RAD),
     float(raan * DEG_TO_RAD),
     float(nu * DEG_TO_RAD),
-    PositionAngle.TRUE,
+    PositionAngleType.TRUE,
     FramesFactory.getEME2000(),
     epoch0_orekit,
     Constants.WGS84_EARTH_MU,
