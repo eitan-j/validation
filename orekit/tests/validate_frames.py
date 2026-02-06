@@ -219,10 +219,7 @@ def validate_from_body_intertial_to_body_fixed(body_name, r_vec, v_vec):
     )
 
     # orekit: collect body information
-    (
-        BODY_OREKIT,
-        BODY_FIXED_FRAME_OREKIT
-    ) = OREKIT_BODIES_AND_FRAMES[body_name]
+    (BODY_OREKIT, BODY_FIXED_FRAME_OREKIT) = OREKIT_BODIES_AND_FRAMES[body_name]
 
     # orekit: build r_vec and v_vec wrt inertial body frame
     xyz_orekit = Vector3D(rx, ry, rz)
@@ -243,8 +240,7 @@ def validate_from_body_intertial_to_body_fixed(body_name, r_vec, v_vec):
 
     # orekit: build conversion between BodyICRF and BodyFixed frames
     bodyICRF_to_bodyFIXED_orekit = BODY_ICRF_FRAME_OREKIT.getTransformTo(
-        BODY_FIXED_FRAME_OREKIT,
-        J2000_OREKIT
+        BODY_FIXED_FRAME_OREKIT, J2000_OREKIT
     )
 
     # orekit: convert from inertial coordinates to non-inertial ones
@@ -288,7 +284,7 @@ def validate_GCRF_to_ITRF(r_vec, v_vec):
 
     # orekit: build conversion between GCRF and ITRF
     GCRF_TO_ITRF_OREKIT = GCRF_FRAME_OREKIT.getTransformTo(
-        ITRF_FRAME_OREKIT, J2000_OREKIT,
+        ITRF_FRAME_OREKIT, J2000_OREKIT
     )
 
     # orekit: convert from GCRF to ITRF using previous built conversion
@@ -312,8 +308,5 @@ def validate_GCRF_to_ITRF(r_vec, v_vec):
 
     # Check position conversion
     assert_quantity_allclose(
-        coords_ITRS_boinor,
-        coords_ITRF_orekit,
-        atol=1e-3 * u.m,
-        rtol=1e-2
+        coords_ITRS_boinor, coords_ITRF_orekit, atol=1e-3 * u.m, rtol=1e-2
     )

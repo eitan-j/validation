@@ -29,7 +29,9 @@ setup_orekit_curdir("orekit-data.zip")
 # TODO: make both functions test with circular orbits
 
 
-@pytest.mark.xfail(reason="Maneuver.hohmann only supports circular starting orbits. As far as I can tell this was also the case when this test got added, so I'm not sure what the deal is.")
+@pytest.mark.xfail(
+    reason="Maneuver.hohmann only supports circular starting orbits. As far as I can tell this was also the case when this test got added, so I'm not sure what the deal is."
+)
 def validate_3D_hohmann():
 
     # Initial orbit state vectors, final radius and time of flight
@@ -100,9 +102,7 @@ def validate_3D_hohmann():
 
     # Retrieve propagation time after maneuver has been applied
     tof_prop = tof - man_boinor.get_total_time().to(u.s).value
-    ssf_boinor = ss0_boinor.apply_maneuver(man_boinor).propagate(
-        tof_prop * u.s
-    )
+    ssf_boinor = ss0_boinor.apply_maneuver(man_boinor).propagate(tof_prop * u.s)
 
     # Retrieve boinor final state vectors
     r_boinor, v_boinor = ssf_boinor.rv()
@@ -203,7 +203,7 @@ def validate_3D_bielliptic():
 
     # Retrieve propagation time after maneuver has been applied
     tof_prop = tof - man_boinor.get_total_time().to(u.s).value
-    ssf_boinor = ss0_boinor.apply_maneuver(man_boinor).propagate(tof_prop * u.s,)
+    ssf_boinor = ss0_boinor.apply_maneuver(man_boinor).propagate(tof_prop * u.s)
 
     # Retrieve boinor final state vectors
     r_boinor, v_boinor = ssf_boinor.rv()
