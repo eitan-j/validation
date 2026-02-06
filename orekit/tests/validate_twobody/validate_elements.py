@@ -3,17 +3,17 @@
 import numpy as np
 from astropy import units as u
 from astropy.tests.helper import assert_quantity_allclose
+from boinor.bodies import Earth
+from boinor.twobody import Orbit
+from orekit.pyhelpers import setup_orekit_curdir
 from org.hipparchus.geometry.euclidean.threed import Vector3D
 from org.orekit.frames import FramesFactory
-from org.orekit.orbits import KeplerianOrbit, PositionAngle
+from org.orekit.orbits import KeplerianOrbit, PositionAngleType
 from org.orekit.time import AbsoluteDate
 from org.orekit.utils import Constants as C
 from org.orekit.utils import PVCoordinates
-from boinor.bodies import Earth
-from boinor.twobody import Orbit
 
 import orekit
-from orekit.pyhelpers import setup_orekit_curdir
 
 # Setup orekit virtual machine and associated data
 VM = orekit.initVM()
@@ -72,7 +72,7 @@ def validate_coe2rv():
     epoch_00 = AbsoluteDate.J2000_EPOCH
     gcrf_frame = FramesFactory.getGCRF()
     ss0_orekit = KeplerianOrbit(
-        a, ecc, inc, argp, raan, nu, PositionAngle.TRUE, gcrf_frame, epoch_00, k
+        a, ecc, inc, argp, raan, nu, PositionAngleType.TRUE, gcrf_frame, epoch_00, k
     )
 
     # Build boinor orbit
